@@ -40,6 +40,16 @@ const keys = {
         pressed: false
     }
 }
+let imagesLoaded = 0
+function checkLoaded() {
+  imagesLoaded++
+  if (imagesLoaded === 2) {
+    animate()
+  }
+}
+
+image.onload = checkLoaded
+character.onload = checkLoaded
 function animate(){
     window.requestAnimationFrame(animate)
     background.draw()
