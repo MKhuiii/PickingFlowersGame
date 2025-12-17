@@ -10,21 +10,87 @@ const image = new Image()
 image.src = './images/Map demo.png'
 const character = new Image()
 character.src = './images/rowletDown.png'
-class Sprite{
-    constructor({position, velocity, image}){
+class Boundary{
+    static width = 48
+    static height = 48
+    constructor({position}){
         this.position = position
-        this.image = image
+        this.height = 48
+        this.width = 48
     }
     draw(){
-        c.drawImage(this.image, this.position.x, this.position.y)
+        c.fillStyle = 'red'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
+const collisionsMap = []
+for(i = 0;i < collisions.length;i+=80){
+    collisionsMap.push(collisions.slice(i, i + 80))
+}
+const offset = {
+    x: -440,
+    y: -440
+}
+const boundaries = []
+collisionsMap.forEach((row, i) => {
+    row.forEach((symbol, j)=>{
+        if(symbol === 460){
+            boundaries.push(new Boundary({
+                position: {
+                    x: j * Boundary.width + offset.x,
+                    y: i * Boundary.height + offset.y
+                }
+            })
+            )
+        }
+    })
+})
+class Sprite{
+    constructor({position, velocity, image, width, height, frames}){
+        this.position = position
+        this.image = image
+        this.width = width
+        this.height = height
+        this.frames = frames
+    }
+    draw(){
+        c.drawImage(
+        this.image,
+        0,
+        0,
+        this.image.width/this.frames, 
+        this.image.height,
+        this.position.x,
+        this.position.y,
+        this.image.width/this.frames, 
+        this.image.height
+    )
+    c.strokeStyle = 'blue'
+    c.strokeRect(
+        player.position.x,
+        player.position.y,
+        player.width,
+        player.height
+    )   
+    }
+}
+const player = new Sprite({
+    position: {
+        x: canvas.width / 2 - 120 / 4 / 2,
+        y: canvas.height / 2 - 28 / 2 
+    },
+    image: character,
+    width: 120 / 4,
+    height: 28,
+    frames: 4
+})
 const background = new Sprite({
     position: {
-        x: -455,
-        y: -410
+        x: offset.x,
+        y: offset.y
     },
-    image: image
+    image: image,
+    frames: 1
 })
 const keys = {
     w: {
@@ -47,37 +113,125 @@ function checkLoaded() {
     animate()
   }
 }
-
+function rectangularCollision({rectangle1, rectangle2}){
+    return (
+        rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+        rectangle1.position.y + rectangle1.height >= rectangle2.position.y &&
+        rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+        rectangle1.position.y <= rectangle2.position.y + rectangle2.height
+    )
+}
+const movables = [background, ...boundaries]
 image.onload = checkLoaded
 character.onload = checkLoaded
 function animate(){
     window.requestAnimationFrame(animate)
     background.draw()
-    c.drawImage(
-        character,
-        0,
-        0,
-        character.width/4, 
-        character.height,
-        canvas.width/2 - character.width/4, 
-        canvas.height/2,
-        character.width/4, 
-        character.height
-    );
+    player.draw()
+    boundaries.forEach(boundary =>{
+        boundary.draw()
+    })
     if(keys.w.pressed){
-        background.position.y += 2
+        let moving = true
+        for(let i = 0;i < boundaries.length;i++){
+        const boundary = boundaries[i]
+        if(rectangularCollision({
+            rectangle1: player,
+            rectangle2: {
+                ...boundary,
+                position: {
+                    x: boundary.position.x,
+                    y: boundary.position.y + 2
+                }
+            }
+            })
+        ){
+            moving = false
+            break
+        }
+        }
+        if(moving){
+            movables.forEach(movable => {
+                movable.position.y += 2
+            })
+        }
     }
     if(keys.a.pressed){
-        background.position.x += 2
+        let moving = true
+        for(let i = 0;i < boundaries.length;i++){
+        const boundary = boundaries[i]
+        if(rectangularCollision({
+            rectangle1: player,
+            rectangle2: {
+                ...boundary,
+                position: {
+                    x: boundary.position.x + 2,
+                    y: boundary.position.y
+                }
+            }
+            })
+        ){
+            moving = false
+            break
+        }
+        }
+        if(moving){
+            movables.forEach(movable => {
+            movable.position.x += 2
+        })
+        }
     }
     if(keys.s.pressed){
-        background.position.y -= 2
+        let moving = true
+        for(let i = 0;i < boundaries.length;i++){
+        const boundary = boundaries[i]
+        if(rectangularCollision({
+            rectangle1: player,
+            rectangle2: {
+                ...boundary,
+                position: {
+                    x: boundary.position.x,
+                    y: boundary.position.y - 2
+                }
+            }
+            })
+        ){
+            moving = false
+            break
+        }
+        }
+        if(moving){
+            movables.forEach(movable => {
+            movable.position.y -= 2
+        })
+        }
     }
     if(keys.d.pressed){
-        background.position.x -= 2
+        let moving = true
+        for(let i = 0;i < boundaries.length;i++){
+        const boundary = boundaries[i]
+        if(rectangularCollision({
+            rectangle1: player,
+            rectangle2: {
+                ...boundary,
+                position: {
+                    x: boundary.position.x - 2,
+                    y: boundary.position.y
+                }
+            }
+            })
+        ){
+            moving = false
+            break
+        }
+        }
+        if(moving){
+            movables.forEach(movable => {
+            movable.position.x -= 2
+        })
+        }
     }
 }
-animate()
 window.addEventListener('keydown', (e) => {
     switch (e.key) {
         case 'w':
