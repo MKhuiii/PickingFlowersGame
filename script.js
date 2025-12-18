@@ -8,21 +8,17 @@ c.fillStyle = 'black';
 c.fillRect(0, 0, canvas.width, canvas.height)
 const image = new Image()
 image.src = './images/Map demo.png'
-const character = new Image()
-character.src = './images/rowletDown.png'
-class Boundary{
-    static width = 48
-    static height = 48
-    constructor({position}){
-        this.position = position
-        this.height = 48
-        this.width = 48
-    }
-    draw(){
-        c.fillStyle = 'red'
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
-    }
-}
+const foreGroundImage = new Image()
+foreGroundImage.src = './images/foreGroundObjects.png'
+const characterDown = new Image()
+characterDown.src = './images/rowletDown.png'
+const characterUp = new Image()
+characterUp.src = './images/rowletUp.png'
+const characterLeft = new Image()
+characterLeft.src = './images/rowletLeft.png'
+const characterRight = new Image()
+characterRight.src = './images/rowletRight.png'
+
 const collisionsMap = []
 for(i = 0;i < collisions.length;i+=80){
     collisionsMap.push(collisions.slice(i, i + 80))
@@ -45,44 +41,24 @@ collisionsMap.forEach((row, i) => {
         }
     })
 })
-class Sprite{
-    constructor({position, velocity, image, width, height, frames}){
-        this.position = position
-        this.image = image
-        this.width = width
-        this.height = height
-        this.frames = frames
-    }
-    draw(){
-        c.drawImage(
-        this.image,
-        0,
-        0,
-        this.image.width/this.frames, 
-        this.image.height,
-        this.position.x,
-        this.position.y,
-        this.image.width/this.frames, 
-        this.image.height
-    )
-    c.strokeStyle = 'blue'
-    c.strokeRect(
-        player.position.x,
-        player.position.y,
-        player.width,
-        player.height
-    )   
-    }
-}
+
 const player = new Sprite({
     position: {
         x: canvas.width / 2 - 120 / 4 / 2,
         y: canvas.height / 2 - 28 / 2 
     },
-    image: character,
+    image: characterDown,
     width: 120 / 4,
     height: 28,
-    frames: 4
+    frames:{
+        max: 4
+    },
+    sprites: {
+        up: characterUp,
+        down: characterDown,
+        left: characterLeft,
+        right: characterRight
+    }
 })
 const background = new Sprite({
     position: {
@@ -90,7 +66,17 @@ const background = new Sprite({
         y: offset.y
     },
     image: image,
-    frames: 1
+    width: 3840,
+    height: 2400
+})
+const foreground = new Sprite({
+    position: {
+        x: offset.x,
+        y: offset.y
+    },
+    image: foreGroundImage,
+    width: 3840,
+    height: 2400
 })
 const keys = {
     w: {
@@ -121,18 +107,23 @@ function rectangularCollision({rectangle1, rectangle2}){
         rectangle1.position.y <= rectangle2.position.y + rectangle2.height
     )
 }
-const movables = [background, ...boundaries]
+const movables = [background, ...boundaries, foreground]
 image.onload = checkLoaded
-character.onload = checkLoaded
+foreGroundImage.onload = checkLoaded
 function animate(){
     window.requestAnimationFrame(animate)
+    c.clearRect(0, 0, canvas.width, canvas.height)
     background.draw()
     player.draw()
+    foreground.draw()
     boundaries.forEach(boundary =>{
         boundary.draw()
     })
+    player.moving = false
     if(keys.w.pressed){
         let moving = true
+        player.moving = true
+        player.image = player.sprites.up
         for(let i = 0;i < boundaries.length;i++){
         const boundary = boundaries[i]
         if(rectangularCollision({
@@ -158,6 +149,8 @@ function animate(){
     }
     if(keys.a.pressed){
         let moving = true
+        player.moving = true
+        player.image = player.sprites.left
         for(let i = 0;i < boundaries.length;i++){
         const boundary = boundaries[i]
         if(rectangularCollision({
@@ -183,6 +176,8 @@ function animate(){
     }
     if(keys.s.pressed){
         let moving = true
+        player.moving = true
+        player.image = player.sprites.down
         for(let i = 0;i < boundaries.length;i++){
         const boundary = boundaries[i]
         if(rectangularCollision({
@@ -208,6 +203,8 @@ function animate(){
     }
     if(keys.d.pressed){
         let moving = true
+        player.moving = true
+        player.image = player.sprites.right
         for(let i = 0;i < boundaries.length;i++){
         const boundary = boundaries[i]
         if(rectangularCollision({
