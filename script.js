@@ -70,8 +70,10 @@ const player = new Sprite({
         left: characterLeft,
         right: characterRight
     },
-    moving: false
+    moving: false,
+    maxElapsed: 10
 })
+console.log(player)
 const Flower1 = new Sprite({
     position: {
         x: offset.x + 1520,
