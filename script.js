@@ -177,7 +177,6 @@ function checkLoaded() {
   imagesLoaded++
   if (imagesLoaded === 2) {
     animate()
-    animate()
   }
 }
 function rectangularCollision({rectangle1, rectangle2}){
