@@ -186,6 +186,7 @@ function gameCompleted(){
     gameScreen = document.getElementById("gameScreen")
     gameScreen.style.filter = "blur(3px)"
     gameScreen.style.pointerEvents = "none"
+    gameScreen.style.zIndex = 0
 }
 function continueText(){
     const congrats = document.getElementById("congrats")
