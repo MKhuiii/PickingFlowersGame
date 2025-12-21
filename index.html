@@ -9,14 +9,22 @@
 </head>
 <body>
     <div id="ui" hidden>
-        <div id="congrats" >
+        <div id="congrats" hidden>
             <h2>Congrats!</h2>
             <h4>You have found all the flowers</h4>
             <img src="./images/ThumbUp.jpg" alt="">
             <span onclick="continueText();"><i class="fa-solid fa-arrow-right"></i></span>
         </div>
     </div>
-    <canvas id="gameScreen"></canvas>
+    <div id="gameScreen">
+        <canvas id="mapScreen"></canvas>
+        <div id="information">
+            <div id="progress">0/6
+                <img src="./images/flowerIcon.png" alt="">
+            </div>
+            <div id="inv"></div>
+        </div>
+    </div>
     <script src="./data/collisions.js"></script>
     <script src="./classes.js"></script>
     <script src="./script.js"></script>

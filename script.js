@@ -28,6 +28,8 @@ const flower4 = new Image()
 flower4.src = './images/Flower4.png'
 const flower5 = new Image()
 flower5.src = './images/Flower5.png'
+const flower6 = new Image()
+flower6.src = './images/Flower6.png'
 const collisionsMap = []
 for(i = 0;i < collisions.length;i+=80){
     collisionsMap.push(collisions.slice(i, i + 80))
@@ -139,7 +141,20 @@ const Flower5 = new Sprite({
     },
     moving: false,
 })
-const flowers = [Flower1, Flower2, Flower3, Flower4, Flower5]
+const Flower6 = new Sprite({
+    position: {
+        x: offset.x + 650,
+        y: offset.y + 200
+    },
+    image: flower6,
+    width: 32,
+    height: 32,
+    frames: {
+        max: 1
+    },
+    moving: false,
+})
+const flowers = [Flower1, Flower2, Flower3, Flower4, Flower5, Flower6]
 const background = new Sprite({
     position: {
         x: offset.x,
@@ -183,10 +198,11 @@ function checkLoaded() {
 }
 function gameCompleted(){
     document.getElementById("ui").hidden = false
-    gameScreen = document.getElementById("gameScreen")
-    gameScreen.style.filter = "blur(3px)"
-    gameScreen.style.pointerEvents = "none"
-    gameScreen.style.zIndex = 0
+    document.getElementById("congrats").hidden = false
+    mapScreen = document.getElementById("mapScreen")
+    mapScreen.style.filter = "blur(3px)"
+    mapScreen.style.pointerEvents = "none"
+    mapScreen.style.zIndex = 0
 }
 function continueText(){
     const congrats = document.getElementById("congrats")
@@ -220,14 +236,25 @@ function pickingFlowers(flower){
         flower.position.x = offset.x - 100
         flower.position.y = offset.y - 100
         progress++;
-        console.log(progress + "/5")
+        console.log(progress + "/6")
+        document.getElementById("progress").innerText = progress + "/6"
+        var flowerImg = document.createElement('img')
+        flowerImg.src = "./images/flowerIcon.png"
+        flowerImg.alt = ""
+        const gameProgress = document.getElementById("progress")
+        gameProgress.appendChild(flowerImg)
+        const inv = document.getElementById('inv')
+        var pickedFlower = document.createElement('img')
+        pickedFlower.src = flower.image.src
+        pickedFlower.alt = ""
+        inv.appendChild(pickedFlower)
     }
 }
 const movables = [background, ...boundaries, foreground, ...flowers]
 image.onload = checkLoaded
 foreGroundImage.onload = checkLoaded
 function animate(){
-    if(progress != 5){
+    if(progress != 6){
         window.requestAnimationFrame(animate)
     }
     else{
