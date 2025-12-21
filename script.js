@@ -182,7 +182,7 @@ function checkLoaded() {
   }
 }
 function gameCompleted(){
-    document.getElementById("congrats").hidden = false
+    document.getElementById("ui").hidden = false
     gameScreen = document.getElementById("gameScreen")
     gameScreen.style.filter = "blur(3px)"
     gameScreen.style.pointerEvents = "none"

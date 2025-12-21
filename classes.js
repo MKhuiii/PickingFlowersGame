@@ -40,7 +40,13 @@ class Boundary{
     constructor({position, type}){
         this.position = position
         this.type = type
-        if(type === 466){
+        if(type === 467){
+            this.width = 48
+            this.height = 24
+            this.offsetX = 0
+            this.offsetY = 24
+        }
+        else if(type === 466){
             this.width = 24
             this.height = 48
             this.offsetX = 24
