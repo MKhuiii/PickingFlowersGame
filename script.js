@@ -181,6 +181,24 @@ function checkLoaded() {
     animate()
   }
 }
+function gameCompleted(){
+    document.getElementById("congrats").hidden = false
+    gameScreen = document.getElementById("gameScreen")
+    gameScreen.style.filter = "blur(3px)"
+    gameScreen.style.pointerEvents = "none"
+}
+function continueText(){
+    const congrats = document.getElementById("congrats")
+    congrats.innerHTML = ""
+    var newNode = document.createElement("h3")
+    const text = document.createTextNode("For the time you spent finding these flowers, they are actually for you!")
+    newNode.appendChild(text)
+    congrats.appendChild(newNode)
+    newNode = document.createElement("img")
+    newNode.src = "./images/GivingFlowers.jpg"
+    newNode.alt = ""
+    congrats.appendChild(newNode)
+}
 function rectangularCollision({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.hitbox.position.x &&
@@ -208,7 +226,12 @@ const movables = [background, ...boundaries, foreground, ...flowers]
 image.onload = checkLoaded
 foreGroundImage.onload = checkLoaded
 function animate(){
-    window.requestAnimationFrame(animate)
+    if(progress != 5){
+        window.requestAnimationFrame(animate)
+    }
+    else{
+        gameCompleted()
+    }
     c.clearRect(0, 0, canvas.width, canvas.height)
     background.draw()
     player.draw()
@@ -217,10 +240,6 @@ function animate(){
         pickingFlowers(flower)
     })
     foreground.draw()
-    if(progress === 5){
-        alert("Congrats! You have found all the flowers")
-        progress = 0
-    }
     player.moving = false
     if (keys.w.pressed) {
     let moving = true

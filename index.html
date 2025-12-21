@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet"   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Picking Flowers Game</title>
 </head>
 <body>
-    <canvas></canvas>
+    <div id="ui">
+        <div id="congrats" hidden>
+            <h2>Congrats!</h2>
+            <h4>You have found all the flowers</h4>
+            <img src="./images/ThumbUp.jpg" alt="">
+            <span onclick="continueText();"><i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+    </div>
+    <canvas id="gameScreen"></canvas>
     <script src="./data/collisions.js"></script>
     <script src="./classes.js"></script>
     <script src="./script.js"></script>
