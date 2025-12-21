@@ -217,8 +217,8 @@ function pickingFlowers(flower){
     ){
         console.log("Picking !")
         flower.visible = false
-        flower.position.x = 0
-        flower.position.y = 0
+        flower.position.x = offset.x - 100
+        flower.position.y = offset.y - 100
         progress++;
         console.log(progress + "/5")
     }
