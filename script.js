@@ -3,7 +3,7 @@ const c = canvas.getContext('2d')
 
 canvas.width = 1280
 canvas.height = 720
-
+var progress = 0
 c.fillStyle = 'black';
 c.fillRect(0, 0, canvas.width, canvas.height)
 const image = new Image()
@@ -18,8 +18,16 @@ const characterLeft = new Image()
 characterLeft.src = './images/rowletLeft.png'
 const characterRight = new Image()
 characterRight.src = './images/rowletRight.png'
-const testObject = new Image()
-testObject.src = './images/testObject.png'
+const flower1 = new Image()
+flower1.src = './images/Flower1.png'
+const flower2 = new Image()
+flower2.src = './images/Flower2.png'
+const flower3 = new Image()
+flower3.src = './images/Flower3.png'
+const flower4 = new Image()
+flower4.src = './images/Flower4.png'
+const flower5 = new Image()
+flower5.src = './images/Flower5.png'
 const collisionsMap = []
 for(i = 0;i < collisions.length;i+=80){
     collisionsMap.push(collisions.slice(i, i + 80))
@@ -64,19 +72,72 @@ const player = new Sprite({
     },
     moving: false
 })
-const test = new Sprite({
+const Flower1 = new Sprite({
     position: {
-        x: canvas.width / 2 - 120 / 4 / 2 + 100,
-        y: canvas.height / 2 - 28 / 2 + 100 
+        x: offset.x + 1520,
+        y: offset.y + 1900
     },
-    image: testObject,
-    width: 16,
-    height: 16,
+    image: flower1,
+    width: 32,
+    height: 64,
     frames: {
-        max: 4
+        max: 1
     },
-    moving: true
+    moving: false,
 })
+const Flower2 = new Sprite({
+    position: {
+        x: offset.x + 2265,
+        y: offset.y + 224
+    },
+    image: flower2,
+    width: 32,
+    height: 48,
+    frames: {
+        max: 1
+    },
+    moving: false,
+})
+const Flower3 = new Sprite({
+    position: {
+        x: offset.x + 2180,
+        y: offset.y + 1042
+    },
+    image: flower3,
+    width: 48,
+    height: 48,
+    frames: {
+        max: 1
+    },
+    moving: false,
+})
+const Flower4 = new Sprite({
+    position: {
+        x: offset.x + 250,
+        y: offset.y + 2200
+    },
+    image: flower4,
+    width: 32,
+    height: 48,
+    frames: {
+        max: 1
+    },
+    moving: false,
+})
+const Flower5 = new Sprite({
+    position: {
+        x: offset.x + 3700,
+        y: offset.y + 1441
+    },
+    image: flower5,
+    width: 32,
+    height: 48,
+    frames: {
+        max: 1
+    },
+    moving: false,
+})
+const flowers = [Flower1, Flower2, Flower3, Flower4, Flower5]
 const background = new Sprite({
     position: {
         x: offset.x,
@@ -116,6 +177,7 @@ function checkLoaded() {
   imagesLoaded++
   if (imagesLoaded === 2) {
     animate()
+    animate()
   }
 }
 function rectangularCollision({rectangle1, rectangle2}){
@@ -137,9 +199,11 @@ function pickingFlowers(flower){
         flower.visible = false
         flower.position.x = 0
         flower.position.y = 0
+        progress++;
+        console.log(progress + "/5")
     }
 }
-const movables = [background, ...boundaries, foreground, test]
+const movables = [background, ...boundaries, foreground, ...flowers]
 image.onload = checkLoaded
 foreGroundImage.onload = checkLoaded
 function animate(){
@@ -147,9 +211,15 @@ function animate(){
     c.clearRect(0, 0, canvas.width, canvas.height)
     background.draw()
     player.draw()
-    test.draw()
+    flowers.forEach(flower => {
+        flower.draw()
+        pickingFlowers(flower)
+    })
     foreground.draw()
-    pickingFlowers(test)
+    if(progress === 5){
+        alert("Congrats! You have found all the flowers")
+        progress = 0
+    }
     player.moving = false
     if (keys.w.pressed) {
     let moving = true
